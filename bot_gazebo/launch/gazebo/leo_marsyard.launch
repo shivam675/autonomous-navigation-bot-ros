@@ -1,0 +1,8 @@
+ <launch>
+
+  <include file="$(find bot_gazebo)/launch/gazebo/leo_gazebo.launch"
+           pass_all_args="true">
+    <arg name="world_name" value="$(find bot_gazebo)/worlds/workplace.world"/>
+  </include>
+
+</launch>
