@@ -218,6 +218,42 @@
       <child link="${link_prefix}camera_optical_frame"/>
     </joint>
 
+    <joint name="realsensejoint" type="fixed">
+      <axis xyz="0 0 0" />
+      <origin xyz="0.277944460576403 0.00208437301780086 0.0230507258091751" rpy="0 0 0"/>
+      <parent link="base_link"/>
+      <child link="camera_link"/>
+    </joint>
+    <link name="camera_link">
+      <collision>
+        <origin xyz="0.02 0 0" rpy="0 0 0"/>
+        <geometry>0
+          <box size="0.001 0.001 0.001"/>
+        </geometry>
+      </collision>
+
+      <visual>
+        <origin xyz="0 0 0" rpy="1.5707 0 1.5707"/>
+        <geometry>
+          <mesh filename="package://bot_gazebo/models/NAVRS.STL" />
+        </geometry>
+      </visual>
+
+      <inertial>
+        <mass value="1e-5" />
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+      </inertial>
+    </link>
+    <joint name="camera_depth_joint" type="fixed">
+      <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
+      <parent link="camera_link"/>
+      <child link="camera_depth_frame"/>
+    </joint>
+
+      <link name="camera_depth_frame">
+    </link>
+
   </xacro:macro>
 
   <!-- LEO GAZEBO -->
@@ -242,6 +278,15 @@
       <kd>1.0</kd>
       <minDepth>0.003</minDepth>
     </gazebo>
+
+    <!-- lidar colour -->
+
+    <gazebo reference="laser">
+      <material>Gazebo/Black</material>
+    </gazebo>
+    <gazebo reference="camera_link">
+    <material>Gazebo/Black</material>
+  </gazebo>
 
     <!-- wheel ODE properties -->
     <gazebo reference="${link_prefix}wheel_FL_link">
@@ -333,6 +378,84 @@
         <jointB>rocker_R_joint</jointB>
         <forceConstant>100.0</forceConstant>
       </plugin>
+    </gazebo>
+    <!-- LAser plugin -->
+    <gazebo reference="laser">
+      <sensor type="ray" name="head_rplidar_sensor">
+        <pose>0 0 0 0 0 0</pose>
+        <visualize>false</visualize>
+        <update_rate>40</update_rate>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>720</samples>
+              <resolution>1</resolution>
+              <min_angle>-2.35619</min_angle>
+              <max_angle>2.35619</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.5</min>
+            <max>20.0</max>
+            <resolution>0.01</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.01</stddev>
+          </noise>
+        </ray>
+        <plugin name="gazebo_ros_head_rplidar_controller" filename="libgazebo_ros_laser.so">
+          <topicName>/leo/laser/scan</topicName>
+          <frameName>laser</frameName>
+        </plugin>
+      </sensor>
+    </gazebo>
+
+     <!-- Ros intel realsense1 cam -->
+     <gazebo reference="camera_link">
+      <sensor type="depth" name="intelrealsenseD435i">
+        <always_on>1</always_on>
+        <visualize>true</visualize>
+        <camera>
+          <horizontal_fov>1.047</horizontal_fov>
+          <image>
+            <width>640</width>
+            <height>480</height>
+            <format>R8G8B8</format>
+          </image>
+          <depth_camera>
+
+          </depth_camera>
+          <clip>
+            <near>0.1</near>
+            <far>100</far>
+          </clip>
+        </camera>
+        <plugin name="intelrealsense" filename="libgazebo_ros_openni_kinect.so">
+          <alwaysOn>true</alwaysOn>
+          <updateRate>10.0</updateRate>
+          <cameraName>camera</cameraName>
+          <frameName>camera_depth_frame</frameName>
+          <imageTopicName>/camera/color/image_raw</imageTopicName>
+          <depthImageTopicName>/camera/depth/image_rect_raw</depthImageTopicName>
+          <pointCloudTopicName>depth/points</pointCloudTopicName>
+          <cameraInfoTopicName>/camera/color/camera_info</cameraInfoTopicName>
+          <depthImageCameraInfoTopicName>/camera/depth/camera_info</depthImageCameraInfoTopicName>
+          <pointCloudCutoff>0.2</pointCloudCutoff>
+           <pointCloudCutoffMax>10.0</pointCloudCutoffMax>
+          <hackBaseline>0.07</hackBaseline>
+          <distortionK1>0.0</distortionK1>
+          <distortionK2>0.0</distortionK2>
+          <distortionK3>0.0</distortionK3>
+          <distortionT1>0.0</distortionT1>
+          <distortionT2>0.0</distortionT2>
+          <CxPrime>0.0</CxPrime>
+          <Cx>0.0</Cx>
+          <Cy>0.0</Cy>
+          <focalLength>0.0</focalLength>
+        </plugin>
+      </sensor>
     </gazebo>
 
     <!-- ros_control plugin -->
