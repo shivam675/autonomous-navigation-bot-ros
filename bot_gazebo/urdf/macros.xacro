@@ -253,6 +253,37 @@
 
       <link name="camera_depth_frame">
     </link>
+    <link name="laser">
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <inertial>
+          <mass value="0.09"/>
+          <inertia ixx="4.275e-05" ixy="0" ixz="0" iyy="4.275e-05" iyz="0" izz="5.5125e-05"/>
+        </inertial>
+        <collision>
+          <origin rpy="0 0 0" xyz="0 0 0"/>
+          <geometry>
+            <cylinder length="0.040" radius="0.030"/>
+          </geometry>
+        </collision>
+        <visual>
+          <origin rpy="0 0 0" xyz="0 0 0"/>
+          <geometry>
+            <cylinder length="0.040" radius="0.030"/>
+          </geometry>
+        </visual>
+      </link>
+
+      <joint name="rplidar_joint" type="fixed">
+        <axis xyz="0 1 0"/>
+        <origin xyz="0.255540836099039 0 0.18"
+          rpy="0 0 0.00679706827344463" />
+
+        <parent link="base_footprint"/>
+        <child link="laser"/>
+        <limit effort="1000" lower="0" upper="6.28" velocity="100"/>
+        <axis rpy="0 0 0" xyz="0.02 0 0.178"/>
+        <joint_properties damping="5.0" friction="1.0"/>
+      </joint>
 
   </xacro:macro>
 
