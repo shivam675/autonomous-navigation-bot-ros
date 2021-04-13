@@ -497,7 +497,7 @@
         <rightFrontJoint>wheel_FR_joint</rightFrontJoint>
         <leftRearJoint>wheel_RL_joint</leftRearJoint>
         <rightRearJoint>wheel_RR_joint</rightRearJoint>
-        <wheelSeparation>0.4</wheelSeparation>
+        <wheelSeparation>0.18</wheelSeparation>
         <wheelDiameter>0.06</wheelDiameter>
         <robotBaseFrame>base_footprint</robotBaseFrame>
         <torque>60</torque>
