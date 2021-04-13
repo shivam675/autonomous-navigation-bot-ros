@@ -17,6 +17,6 @@ def callback(msg):
 rospy.init_node("odom_relay")
 
 sub = rospy.Subscriber("controllers/diff_drive/odom", Odometry, callback, tcp_nodelay=True)
-pub = rospy.Publisher("wheel_odom", TwistStamped, queue_size=1)
+pub = rospy.Publisher("odom", TwistStamped, queue_size=1)
 
 rospy.spin()
