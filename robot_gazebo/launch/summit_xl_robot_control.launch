@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+
+  <rosparam command="load" file="$(find robot_gazebo)/config/summit_xl_robot_control.yaml" />
+
+  <rosparam command="load" file="$(find robot_gazebo)/config/summit_xl.yaml"/>
+
+  <!-- <node name="robot_gazebo" pkg="robot_gazebo" type="robot_gazebo" output="screen"/> -->
+
+</launch>
